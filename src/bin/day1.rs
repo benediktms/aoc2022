@@ -5,7 +5,7 @@ use std::{
 };
 
 fn main() -> std::io::Result<()> {
-    let path = Path::new("input/input1.txt");
+    let path = Path::new("input/day1/input1.txt");
     let file = File::open(path)?;
 
     let buf_reader = BufReader::new(file);
