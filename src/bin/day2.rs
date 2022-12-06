@@ -60,7 +60,7 @@ fn play_rps(opponent_symbol: &str, your_symbol: &str) -> i32 {
             } else if oppenent_symbol.eq(&Symbol::Rock) {
                 base += 6
             } else if oppenent_symbol.eq(&Symbol::Paper) {
-                base += 1
+                base += 3
             }
         }
         Symbol::Rock => {
@@ -68,7 +68,7 @@ fn play_rps(opponent_symbol: &str, your_symbol: &str) -> i32 {
             if oppenent_symbol.eq(&Symbol::Scissor) {
                 base += 6;
             } else if oppenent_symbol.eq(&Symbol::Rock) {
-                base += 1
+                base += 3
             } else if oppenent_symbol.eq(&Symbol::Paper) {
                 base += 0
             }
@@ -76,7 +76,7 @@ fn play_rps(opponent_symbol: &str, your_symbol: &str) -> i32 {
         Symbol::Scissor => {
             base += 3;
             if oppenent_symbol.eq(&Symbol::Scissor) {
-                base += 1;
+                base += 3;
             } else if oppenent_symbol.eq(&Symbol::Rock) {
                 base += 0
             } else if oppenent_symbol.eq(&Symbol::Paper) {
