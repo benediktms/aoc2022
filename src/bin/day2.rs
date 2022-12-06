@@ -178,6 +178,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     assert_eq!(score, 11906);
+    assert_eq!(determined_score, 11186);
     println!("score: {}", score);
     println!("determined_score: {}", determined_score);
 
