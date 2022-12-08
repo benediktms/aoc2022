@@ -6,42 +6,55 @@ use std::{
 
 use itertools::Itertools;
 
-fn create_strings_from_range(tuple: (&str, &str)) -> (String, String) {
+fn create_vectors(tuple: (&str, &str)) -> (Vec<i32>, Vec<i32>) {
     let range = tuple.0.split("-").collect_tuple::<(&str, &str)>().unwrap();
     let start = range.0.parse::<i32>().unwrap();
     let end = range.1.parse::<i32>().unwrap();
-    let range_one = start..=end;
+    let range = start..=end;
 
-    let range_one_str = range_one.map(|num| num.to_string()).collect_vec().join(",");
-    println!("range one {:?}", range_one_str);
+    let vector_one = range.collect_vec();
 
     let range = tuple.1.split("-").collect_tuple::<(&str, &str)>().unwrap();
     let start = range.0.parse::<i32>().unwrap();
     let end = range.1.parse::<i32>().unwrap();
     let range = start..=end;
 
-    let range_two_str = range.map(|num| num.to_string()).collect_vec().join(",");
-    println!("range two {:?}", range_two_str);
+    let vector_two = range.collect_vec();
 
-    (range_one_str, range_two_str)
+    (vector_one, vector_two)
+}
+
+// https://stackoverflow.com/questions/47043167/does-rust-contain-a-way-to-directly-check-whether-or-not-one-vector-is-a-substr
+fn is_sub<T: PartialEq>(mut haystack: &[T], needle: &[T]) -> bool {
+    if needle.len() == 0 {
+        return true;
+    }
+    while !haystack.is_empty() {
+        if haystack.starts_with(needle) {
+            return true;
+        }
+        haystack = &haystack[1..];
+    }
+    false
 }
 
 fn count_subvectors(raw_string: &str) -> i32 {
+    let mut sum = 0;
+
     let pairs = raw_string
         .split(",")
         .collect_tuple::<(&str, &str)>()
         .unwrap();
 
-    let (range_one, range_two) = create_strings_from_range(pairs);
+    let (vec_one, vec_two) = create_vectors(pairs);
 
-    let one_contains_two = range_one.contains(range_two.as_str());
-    println!("one contains two {:?}", one_contains_two);
-    let two_contains_one = range_two.contains(range_one.as_str());
-    println!("two contains one {:?}", two_contains_one);
+    let (outer, inner) = if vec_one.len() > vec_two.len() {
+        (vec_one, vec_two)
+    } else {
+        (vec_two, vec_one)
+    };
 
-    let mut sum = 0;
-
-    if one_contains_two || two_contains_one {
+    if is_sub(&outer, &inner) {
         sum += 1;
     }
 
@@ -62,8 +75,8 @@ fn main() -> anyhow::Result<()> {
         sum += count_subvectors(&line);
     }
 
-    assert_eq!(true, sum < 490);
     println!("sum: {}", sum);
+    assert_eq!(462, sum);
 
     Ok(())
 }
