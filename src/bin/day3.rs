@@ -1,3 +1,4 @@
+use itertools::{Itertools, TupleWindows};
 use std::{
     fs::File,
     io::{BufRead, BufReader},
@@ -8,16 +9,16 @@ fn get_item_priorities(backpack: (&str, &str)) -> i32 {
     let lowercase_range = b'a'..=b'z';
     let uppercase_range = b'A'..=b'Z';
 
-    let lowercase_vec: Vec<char> = lowercase_range
+    let lowercase_vec = lowercase_range
         .map(|i| (i as char).to_ascii_lowercase())
-        .collect();
+        .collect_vec();
 
-    let uppercase_vec: Vec<char> = uppercase_range
+    let uppercase_vec = uppercase_range
         .map(|i| (i as char).to_ascii_uppercase())
-        .collect();
+        .collect_vec();
 
-    let first_compartment: Vec<char> = backpack.0.chars().collect();
-    let second_compartment: Vec<char> = backpack.1.chars().collect();
+    let first_compartment = backpack.0.chars().collect_vec();
+    let second_compartment = backpack.1.chars().collect_vec();
     let mut is_duplicate = false;
 
     let mut sum = 0;
@@ -84,17 +85,41 @@ fn main() -> anyhow::Result<()> {
     let file = File::open(path)?;
 
     let buf_reader = BufReader::new(file);
-    let lines = buf_reader.lines();
+    let mut lines = buf_reader.lines();
     let mut sum = 0;
 
-    for line in lines {
+    for line in lines.by_ref() {
         let line = line?;
-        let split: Vec<&str> = line.split(|i: char| i.is_ascii_alphabetic()).collect();
+        let split = line.split(|i: char| i.is_ascii_alphabetic()).collect_vec();
 
         let backpack_compartments = line.split_at((split.len() - 1) / 2);
 
         sum += get_item_priorities(backpack_compartments);
     }
+
+    // select 3 rows at a time
+    let mapped = lines
+        .map(|line| match line {
+            Ok(line) => line,
+            Err(err) => panic!("Invalid string: {}", err),
+        })
+        .collect_vec();
+
+    // let chunks: TupleWindows<std::slice::Iter<String>, (&String, &String, &String)> =
+    let chunks = mapped.iter().chunks(3);
+
+    for chunk in chunks.into_iter() {
+        println!("{:?}", chunk.collect_vec())
+    }
+
+    // for chunk in chunks {
+    //     for group in chunk {
+    //         println!("{}", group)
+    //     }
+    // }
+
+    // find the one letter (the badge) (upper or lower) that appears in all three lines
+    // keep track of the sum of the priority the badges in a seperate variable
 
     println!("sum: {}", sum);
     assert_eq!(8123, sum);
