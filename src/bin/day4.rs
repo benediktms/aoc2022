@@ -38,13 +38,17 @@ fn is_sub<T: PartialEq>(mut haystack: &[T], needle: &[T]) -> bool {
     false
 }
 
+fn create_pairs(raw_string: &str) -> (&str, &str) {
+    raw_string
+        .split(",")
+        .collect_tuple::<(&str, &str)>()
+        .unwrap()
+}
+
 fn count_subvectors(raw_string: &str) -> i32 {
     let mut sum = 0;
 
-    let pairs = raw_string
-        .split(",")
-        .collect_tuple::<(&str, &str)>()
-        .unwrap();
+    let pairs = create_pairs(raw_string);
 
     let (vec_one, vec_two) = create_vectors(pairs);
 
@@ -67,16 +71,33 @@ fn main() -> anyhow::Result<()> {
 
     let buf_reader = BufReader::new(file);
     let lines = buf_reader.lines();
+
     let mut sum = 0;
+    let mut overlaps = 0;
 
     for line in lines {
         let line = line?;
+
+        let (vec_one, vec_two) = create_vectors(create_pairs(&line));
+
+        let duplicates = vec_two
+            .iter()
+            .filter(|item| vec_one.iter().contains(item))
+            .collect_vec()
+            .len() as i32;
+
+        if duplicates > 0 {
+            overlaps += 1
+        }
 
         sum += count_subvectors(&line);
     }
 
     println!("sum: {}", sum);
     assert_eq!(462, sum);
+
+    println!("overlaps: {}", overlaps);
+    assert_eq!(835, overlaps);
 
     Ok(())
 }
@@ -89,7 +110,9 @@ mod tests {
         path::Path,
     };
 
-    use crate::count_subvectors;
+    use itertools::Itertools;
+
+    use crate::{count_subvectors, create_pairs, create_vectors};
 
     #[test]
     fn should_correctly_identify_fully_contained_ranges() -> anyhow::Result<()> {
@@ -98,14 +121,28 @@ mod tests {
 
         let buf_reader = BufReader::new(file);
         let lines = buf_reader.lines();
+
         let mut sum = 0;
+        let mut overlaps = 0;
 
         for line in lines {
             let line = line?;
 
+            let (vec_one, vec_two) = create_vectors(create_pairs(&line));
+            let duplicates = vec_two
+                .iter()
+                .filter(|item| vec_one.iter().contains(item))
+                .collect_vec()
+                .len() as i32;
+
+            if duplicates > 0 {
+                overlaps += 1
+            }
+
             sum += count_subvectors(&line);
         }
 
+        assert_eq!(4, overlaps);
         assert_eq!(2, sum);
 
         Ok(())
