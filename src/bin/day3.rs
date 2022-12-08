@@ -48,24 +48,19 @@ fn get_item_priorities(backpack: (&str, &str)) -> i32 {
 
     let first_compartment = backpack.0.chars().collect_vec();
     let second_compartment = backpack.1.chars().collect_vec();
-    let mut is_duplicate = false;
 
     let mut sum = 0;
 
-    for outer_item in &first_compartment {
+    'primary_loop: for outer_item in &first_compartment {
         for inner_item in &second_compartment {
-            is_duplicate = outer_item == inner_item;
+            let is_duplicate = outer_item == inner_item;
 
             if is_duplicate {
                 sum += check_against_alphabet(inner_item, &lowercase_vec, None);
                 sum += check_against_alphabet(inner_item, &uppercase_vec, Some(26));
 
-                break;
+                break 'primary_loop;
             }
-        }
-
-        if is_duplicate {
-            break;
         }
     }
 
@@ -89,32 +84,20 @@ fn caculate_total_of_badges_in_groups(lines: Vec<String>) -> i32 {
         let row_three = &lines[i].chars().collect_vec();
         i += 1;
 
-        let mut is_duplicate = false;
-
-        for item_one in row_one {
+        'primary_loop: for item_one in row_one {
             for item_two in row_two {
                 if item_one == item_two {
                     for item_three in row_three {
-                        if item_three == item_one {
-                            is_duplicate = true;
-                        }
+                        let is_duplicate = item_three == item_one;
 
                         if is_duplicate {
                             score += check_against_alphabet(item_three, &lowercase_vec, None);
                             score += check_against_alphabet(item_three, &uppercase_vec, Some(26));
 
-                            break;
+                            break 'primary_loop;
                         }
                     }
                 }
-
-                if is_duplicate {
-                    break;
-                }
-            }
-
-            if is_duplicate {
-                break;
             }
         }
     }
