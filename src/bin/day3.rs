@@ -93,16 +93,18 @@ fn caculate_total_of_badges_in_groups(lines: Vec<String>) -> i32 {
 
         for item_one in row_one {
             for item_two in row_two {
-                for item_three in row_three {
-                    if item_three == item_one && item_three == item_two {
-                        is_duplicate = true;
-                    }
+                if item_one == item_two {
+                    for item_three in row_three {
+                        if item_three == item_one {
+                            is_duplicate = true;
+                        }
 
-                    if is_duplicate {
-                        score += check_against_alphabet(item_three, &lowercase_vec, None);
-                        score += check_against_alphabet(item_three, &uppercase_vec, None);
+                        if is_duplicate {
+                            score += check_against_alphabet(item_three, &lowercase_vec, None);
+                            score += check_against_alphabet(item_three, &uppercase_vec, Some(26));
 
-                        break;
+                            break;
+                        }
                     }
                 }
 
@@ -146,8 +148,8 @@ fn main() -> anyhow::Result<()> {
     println!("sum: {}", sum);
     assert_eq!(8123, sum);
 
-    // not 1242
     println!("sum of badges: {}", sum_of_badges);
+    assert_eq!(2620, sum_of_badges);
 
     Ok(())
 }
