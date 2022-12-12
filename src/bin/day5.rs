@@ -25,20 +25,20 @@ fn main() -> anyhow::Result<()> {
         let line = line.context("Failed to load line")?;
         let mut chars = line.chars();
 
-        for i in 0..9 {
+        stacks.iter_mut().take(9).for_each(|stack| {
             if let Ok(chunk) = chars.next_chunk::<3>() {
                 if chunk[0] == '[' {
-                    stacks[i].insert(0, chunk[1])
+                    stack.insert(0, chunk[1])
                 }
             }
             chars.next();
-        }
+        });
     }
 
     let instructions = read_file("input/day5/instructions.txt")
         .map(|line| {
             let line = line.context("Can not read line").unwrap();
-            let split = line.split(" ").collect_vec();
+            let split = line.split(' ').collect_vec();
             (
                 split[1].parse::<i32>().unwrap(),
                 split[3].parse::<usize>().unwrap() - 1,
