@@ -5,6 +5,7 @@ use std::collections::{HashSet, VecDeque};
 use anyhow::Context;
 use util::read_file;
 
+// https://www.youtube.com/watch?v=LKncwDMrQOg&ab_channel=RitualCoding
 fn get_signal_marker_index(input: String) -> i32 {
     let mut stream = input.chars();
 

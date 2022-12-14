@@ -26,6 +26,7 @@ fn main() -> anyhow::Result<()> {
         let line = line.context("Failed to load line")?;
         let mut chars = line.chars();
 
+        // https://www.youtube.com/watch?v=qCA8C-1D0T0&t=606s&ab_channel=RitualCoding
         stacks.iter_mut().take(9).for_each(|stack| {
             if let Ok(chunk) = chars.next_chunk::<3>() {
                 if chunk[0] == '[' {
