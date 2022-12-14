@@ -15,7 +15,7 @@ fn get_signal_marker_index(input: &str, increase_buffer: bool) -> i32 {
 
     // use deque as a sliding window along the stream
     let mut buf = VecDeque::with_capacity(marker_index);
-    // initialize the deque with the first 4 elements
+    // initialize the deque with the first initial number of elements (4 or 14)
     if increase_buffer {
         buf.extend(stream.next_chunk::<14>().unwrap().iter());
     } else {
