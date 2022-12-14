@@ -5,22 +5,15 @@ use std::{
     path::Path,
 };
 
-fn check_against_alphabet(
-    item: &char,
-    comparitor: &Vec<char>,
-    additional_offset: Option<i32>,
-) -> i32 {
+fn check_against_alphabet(item: &char, comparitor: &[char], additional_offset: Option<i32>) -> i32 {
     let mut sum = 0;
     let index = comparitor.iter().position(|char| char == item);
-    let offset = match additional_offset {
-        Some(num) => num as i32,
-        None => 0,
-    };
+    let offset = additional_offset.unwrap_or(0);
 
     match index {
         Some(value) => {
             let priority = (value as i32) + 1 + offset;
-            sum += priority as i32
+            sum += priority
         }
         None => sum += 0,
     };
@@ -128,10 +121,10 @@ fn main() -> anyhow::Result<()> {
 
     let sum_of_badges = caculate_total_of_badges_in_groups(string_lines);
 
-    println!("sum: {}", sum);
+    println!("sum: {sum}");
     assert_eq!(8123, sum);
 
-    println!("sum of badges: {}", sum_of_badges);
+    println!("sum of badges: {sum_of_badges}");
     assert_eq!(2620, sum_of_badges);
 
     Ok(())
@@ -170,8 +163,8 @@ mod tests {
 
         let sum_of_badges = caculate_total_of_badges_in_groups(string_lines);
 
-        println!("sum: {}", sum);
-        println!("sum of badges: {}", sum_of_badges);
+        println!("sum: {sum}");
+        println!("sum of badges: {sum_of_badges}");
 
         assert_eq!(sum, 157);
         assert_eq!(sum_of_badges, 70);

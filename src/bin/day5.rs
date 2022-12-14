@@ -16,7 +16,6 @@ fn read_file(input: &str) -> Lines<BufReader<File>> {
 fn main() -> anyhow::Result<()> {
     let crates = read_file("input/day5/crates.txt");
     let mut stacks: Vec<Vec<char>> = Vec::with_capacity(9);
-    let mut stacks_alt: Vec<Vec<char>> = Vec::with_capacity(9);
 
     for _ in 0..9 {
         stacks.push(Vec::new());
@@ -37,7 +36,7 @@ fn main() -> anyhow::Result<()> {
         });
     }
 
-    stacks_alt = stacks.clone();
+    let mut stacks_alt: Vec<Vec<char>> = stacks.clone();
 
     let instructions = read_file("input/day5/instructions.txt")
         .map(|line| {

@@ -25,7 +25,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     let largest = calories.iter().max().unwrap();
-    println!("largest number: {}", largest);
+    println!("largest number: {largest}");
 
     assert_eq!(*largest, 67633);
 
@@ -35,7 +35,7 @@ fn main() -> anyhow::Result<()> {
 
     // todo find total of sorted
     let total = calories.iter().take(3).sum::<i32>();
-    println!("total of largest 3: {}", total);
+    println!("total of largest 3: {total}");
 
     Ok(())
 }
